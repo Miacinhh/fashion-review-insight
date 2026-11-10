@@ -1,7 +1,20 @@
-# Fashion Review Insight
+# Fashion Review Insight · ViSoBERT demo
 
-Dashboard Streamlit dùng số liệu **tổng hợp** từ 230 đánh giá trong [bảng ABSA_DATA](https://docs.google.com/spreadsheets/d/1WZ03ywEOuyh-nAntkJ7cxT_aHxyUtmxeKEt8mrtsfKo/edit?gid=1763109722). Repository công khai này không chứa văn bản đánh giá gốc hoặc mã đánh giá từng người dùng.
+Web Streamlit dự đoán ABSA thật bằng checkpoint của nhóm. Tập 230 review được người dùng tải lên lúc chạy; nhãn gốc không được dùng để tính biểu đồ dự đoán.
 
-Chạy: `pip install -r requirements.txt` rồi `streamlit run app.py`.
+## Cấu hình mô hình
 
-Mã khía cạnh gốc: 0 = không đề cập, 1 = tiêu cực, 2 = trung tính, 3 = tích cực. Tỷ lệ tính trên các lượt nhắc khía cạnh (mã 1–3), không phải trên số bài đánh giá. Nhãn cần được kiểm duyệt độc lập trước khi dùng làm kết luận cuối cùng.
+- Tại máy: đặt `best_visobert_multiaspect.pt` cạnh `app.py`.
+- Trên Streamlit Cloud: app tải checkpoint từ kho mô hình công khai `dkkdje/fashion-review-visobert`. Không cần token hay Streamlit Secrets.
+- Giữ checkpoint ngoài GitHub thường vì file vượt giới hạn 100 MiB.
+
+## Chạy tại máy
+
+```powershell
+py -m pip install -r requirements.txt
+py -m streamlit run app.py
+```
+
+File dữ liệu tải lên cần các cột `review_text`, `product_name`. Nếu có nhãn gốc `Chất liệu`, `Kiểu dáng`, `Kích cỡ`, `Giá cả`, `Dịch vụ`, chúng chỉ dùng để đối chiếu riêng, không dùng để tạo biểu đồ dự đoán.
+
+Mô hình theo notebook: `uitnlp/visobert`, tối đa 192 token, năm đầu phân loại, nhãn 0–3 theo thứ tự không đề cập/tiêu cực/trung tính/tích cực.
